@@ -1,0 +1,21 @@
+USE IQVIA_IC
+
+--1.	Monte um script SQL que retorne o TOP 10 dos produtos mais vendidos (por valor) no ano de 2019.
+--a.	O resultado deve conter as colunas:
+--i.	Código do produto;
+--ii.	Nome do produto;
+--iii.	Valor vendido;
+
+SELECT TOP 10
+PROD.CODIGO,
+PROD.NOME,
+SUM(ROUND(PRECO,2)) SOMATORIA_VALOR_PRODUTO
+
+FROM [IQVIA_IC].[dbo].[PRODUTO] PROD
+JOIN [IQVIA_IC].[dbo].[PRODUTO_PRECO] PREC ON PREC.ID_PRODUTO = PROD.ID_PRODUTO
+JOIN [IQVIA_IC].[dbo].[VENDA] VEN ON PREC.ID_PRODUTO = PROD.ID_PRODUTO 
+WHERE CONVERT(VARCHAR(4),VEN.PERIODO,112) = '2019'
+
+GROUP BY PROD.CODIGO,
+PROD.NOME
+ORDER BY SOMATORIA_VALOR_PRODUTO DESC
